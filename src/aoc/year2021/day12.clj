@@ -10,7 +10,7 @@
        (map first)))
 
 (defn small? [node]
-  (java.lang.Character/isLowerCase (first node)))
+  (java.lang.Character/isLowerCase ^java.lang.Character (first node)))
 
 ;; part 1
 
