@@ -47,8 +47,6 @@
 (defn travel-costs [start grid]
   (travel-costs-recur (priority-map start 0) (initial-cost-grid start grid) grid))
 
-#_(type (rest (priority-map :a 1)))
-
 #_(travel-costs [0 0] [[1 7 4]
                        [1 2 2]
                        [1 1 1]])
@@ -59,13 +57,6 @@
 
 (defn shortest-path [start end grid]
   (get-in (travel-costs start grid) end))
-
-;; part 1
-
-#_(let [grid (->> (parse-input 2021 "15" "\n")
-                  (mapv (fn [row] (mapv #(Integer. (str %)) row))))]
-    (shortest-path [0 0] [(dec (count grid))
-                          (dec (count (first grid)))] grid))
 
 ;; part 2
 
@@ -87,10 +78,11 @@
 
 #_(time (let [grid (->> (parse-input 2021 "15" "\n")
                         (mapv (fn [row] (mapv #(Integer. (str %)) row)))
-                        manipulate-grid)]
-          #_(spit "grid.txt" grid)
-          (shortest-path [0 0] [(dec (count grid))
-                                (dec (count (first grid)))] grid)))
+                        manipulate-grid)
+              start [0 0]
+              end [(dec (count grid))
+                   (dec (count (first grid)))]]
+          (shortest-path start end grid)))
 ;; 153606ms
 ;; use pqueue
 ;; 7532ms

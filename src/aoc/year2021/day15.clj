@@ -87,9 +87,11 @@
 ;; part 1
 
 #_(let [grid (->> (parse-input 2021 "15" "\n")
-                  (mapv (fn [row] (mapv #(Integer. (str %)) row))))]
-    (shortest-path [0 0] [(dec (count grid))
-                          (dec (count (first grid)))] grid))
+                  (mapv (fn [row] (mapv #(Integer. (str %)) row))))
+        start [0 0]
+        end [(dec (count grid))
+             (dec (count (first grid)))]]
+    (shortest-path start end grid))
 
 ;; part 2
 
@@ -109,9 +111,10 @@
 
 #_(manipulate-grid [[8]])
 
-#_(time (let [grid (->> (parse-input 2021 "15" "\n")
-                        (mapv (fn [row] (mapv #(Integer. (str %)) row)))
-                        manipulate-grid)]
-          #_(spit "grid.txt" grid)
-          (shortest-path [0 0] [(dec (count grid))
-                                (dec (count (first grid)))] grid)))
+#_(let [grid (->> (parse-input 2021 "15" "\n")
+                  (mapv (fn [row] (mapv #(Integer. (str %)) row)))
+                  manipulate-grid)
+        start [0 0]
+        end [(dec (count grid))
+             (dec (count (first grid)))]]
+    (shortest-path start end grid))
