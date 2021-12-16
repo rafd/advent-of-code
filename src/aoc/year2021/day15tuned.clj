@@ -1,6 +1,7 @@
-(ns aoc.year2021.day15
+(ns aoc.year2021.day15tuned
  (:require
-   [aoc.helpers :refer [parse-input]]))
+   [aoc.helpers :refer [parse-input]]
+   [clojure.data.priority-map :refer [priority-map]]))
 
 (def direction-vectors [[0 1] [0 -1] [1 0] [-1 0]])
 
@@ -22,56 +23,31 @@
 
 #_(initial-cost-grid [0 0] [[1 2] [3 4]])
 
-(defn travel-costs-recur-unsafe [current-point cost-grid grid]
- (let [neighbors (get-neighbors current-point grid)
-       new-cost-grid (->> neighbors
-                          (reduce
-                           (fn [memo neighbor]
-                             (update-in memo neighbor
-                               (fn [old-cost]
-                                 (min old-cost
-                                      (+ (get-in cost-grid current-point)
-                                         (get-in grid neighbor))))))
-                           cost-grid))]
-   (->> neighbors
-        (reduce (fn [memo neighbor]
-                  (if (< (get-in memo current-point)
-                         (get-in memo neighbor))
-                    (travel-costs-recur-unsafe neighbor memo grid)
-                    memo))
-                new-cost-grid))))
-
-(defn travel-costs-unsafe [start grid]
-  (travel-costs-recur-unsafe start (initial-cost-grid start grid) grid))
-
-;; safe
-
 (defn travel-costs-recur [points cost-grid delta-grid]
   (if (empty? points)
     cost-grid
-    (let [current-point (first points)
+    (let [[current-point current-point-cost] (peek points)
           neighbors (get-neighbors current-point delta-grid)
-          points (rest points)
           new-destinations (->> neighbors
-                                (filter (fn [neighbor]
-                                          (< (+ (get-in cost-grid current-point)
-                                                (get-in delta-grid neighbor))
-                                             (get-in cost-grid neighbor)))))
+                                (map (fn [neighbor]
+                                       (let [new-cost (+ current-point-cost
+                                                         (get-in delta-grid neighbor))
+                                             keep? (< new-cost
+                                                      (get-in cost-grid neighbor))]
+                                        [neighbor new-cost keep?])))
+                                (filter (fn [[_ _ keep?]] keep?)))
           new-cost-grid (->> new-destinations
                              (reduce
-                              (fn [memo neighbor]
-                                (assoc-in memo neighbor
-                                  (+ (get-in cost-grid current-point)
-                                     (get-in delta-grid neighbor))))
+                              (fn [memo [neighbor new-cost]]
+                                (assoc-in memo neighbor new-cost))
                               cost-grid))
-          points (->> (into points new-destinations)
-                      (sort-by (fn [point] (get-in new-cost-grid point))))]
-
+          points (into (pop points) new-destinations)]
       (recur points new-cost-grid delta-grid))))
 
 (defn travel-costs [start grid]
-  (travel-costs-recur [start] (initial-cost-grid start grid) grid))
+  (travel-costs-recur (priority-map start 0) (initial-cost-grid start grid) grid))
 
+#_(type (rest (priority-map :a 1)))
 
 #_(travel-costs [0 0] [[1 7 4]
                        [1 2 2]
@@ -115,3 +91,6 @@
           #_(spit "grid.txt" grid)
           (shortest-path [0 0] [(dec (count grid))
                                 (dec (count (first grid)))] grid)))
+;; 153606ms
+;; use pqueue
+;; 7532ms
