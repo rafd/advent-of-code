@@ -3,13 +3,18 @@
  (:require
    [aoc.helpers :refer [parse-input]]
    [clojure.test :refer [is deftest testing run-tests]]
-   [clojure.walk :as walk]
-   [aoc.year2021.day16 :refer [do-the-math]]))
+   [clojure.walk :as walk]))
+
+(def VERSION-BIT-LENGTH 3)
+(def TYPE-ID-BIT-LENGTH 3)
+(def VALUE-CHUNK-BIT-LENGTH 5)
+(def OPERATOR-LENGTH-ID-BIT-LENGTH 1)
+(def OPERATOR-PACKET-COUNT-BIT-LENGTH 11)
+(def OPERATOR-BIT-LENGTH-BIT-LENGTH 15)
 
 (defn bits->int [bits]
   ;; so dirty
   (BigInteger. (apply str bits) 2))
-
 
 (def hex->bits
   {\0 '(0 0 0 0)
@@ -73,28 +78,18 @@
 ;; D2FE28
 ;; 110100101111111000101000
 
-(defn value-packet? [bits]
-  (= 4 (bits->int (take 3 (drop 3 bits)))))
-
-(defn operator-bit-length-packet? [bits]
-  (and (not (value-packet? bits))
-       (= 0 (nth bits 6))))
-
-(defn operator-packet-count-packet? [bits]
-  (and (not (value-packet? bits))
-       (= 1 (nth bits 6))))
-
 (defn parse-value-packet [bits]
-  (let [value-bits (->> (drop 6 bits)
-                        (partition 5)
+  (let [value-bits (->> (drop (+ VERSION-BIT-LENGTH TYPE-ID-BIT-LENGTH) bits)
+                        (partition VALUE-CHUNK-BIT-LENGTH)
                         (reduce (fn [memo bits]
                                   (if (= 0 (first bits))
                                     (reduced (conj memo bits))
                                     (conj memo bits)))
                                 []))]
-    {:version (bits->int (take 3 bits))
-     :type-id (bits->int (take 3 (drop 3 bits)))
-     :length (+ 6 (* 5 (count value-bits)))
+    {:length (+ VERSION-BIT-LENGTH
+                TYPE-ID-BIT-LENGTH
+                (* VALUE-CHUNK-BIT-LENGTH
+                   (count value-bits)))
      :value (->> value-bits
                  (mapcat rest)
                  (bits->int))}))
@@ -113,14 +108,19 @@
             (conj packets packet))))))
 
 (defn parse-operator-packet-count-packet [bits]
-  (let [header-length (+ 3 3 1 11)
+  (let [header-length (+ VERSION-BIT-LENGTH
+                         TYPE-ID-BIT-LENGTH
+                         OPERATOR-LENGTH-ID-BIT-LENGTH
+                         OPERATOR-PACKET-COUNT-BIT-LENGTH)
         packets (parse-packets-by-count
                   ;; how many packets to find
-                  (bits->int (take 11 (drop 7 bits)))
+                  (bits->int (take OPERATOR-PACKET-COUNT-BIT-LENGTH
+                                   (drop (+ VERSION-BIT-LENGTH
+                                            TYPE-ID-BIT-LENGTH
+                                            OPERATOR-LENGTH-ID-BIT-LENGTH)
+                                         bits)))
                   (drop header-length bits))]
-   {:version (bits->int (take 3 bits))
-    :type-id (bits->int (take 3 (drop 3 bits)))
-    :length (apply + header-length (map :length packets))
+   {:length (apply + header-length (map :length packets))
     :packets packets}))
 
 (defn parse-packets-by-bit-length [bit-length bits]
@@ -135,25 +135,35 @@
             (conj packets packet))))))
 
 (defn parse-operator-bit-length-packet [bits]
-  (let [header-length (+ 3 3 1 15)
+  (let [header-length (+ VERSION-BIT-LENGTH
+                         TYPE-ID-BIT-LENGTH
+                         OPERATOR-LENGTH-ID-BIT-LENGTH
+                         OPERATOR-BIT-LENGTH-BIT-LENGTH)
         packets (parse-packets-by-bit-length
-                  (bits->int (take 15 (drop 7 bits)))
+                  (bits->int (take OPERATOR-BIT-LENGTH-BIT-LENGTH
+                                   (drop (+ VERSION-BIT-LENGTH
+                                            TYPE-ID-BIT-LENGTH
+                                            OPERATOR-LENGTH-ID-BIT-LENGTH)
+                                         bits)))
                   (drop header-length bits))]
-   {:version (bits->int (take 3 bits))
-    :type-id (bits->int (take 3 (drop 3 bits)))
-    :length (apply + header-length (map :length packets))
+   {:length (apply + header-length (map :length packets))
     :packets packets}))
 
 (defn parse-packet [bits]
-  (cond
-    (value-packet? bits)
-    (parse-value-packet bits)
+  (let [version (bits->int (take VERSION-BIT-LENGTH bits))
+        type-id (bits->int (take TYPE-ID-BIT-LENGTH (drop VERSION-BIT-LENGTH bits)))]
+   (into
+     {:version version
+      :type-id type-id}
+     (cond
+       (= 4 type-id)
+       (parse-value-packet bits)
 
-    (operator-packet-count-packet? bits)
-    (parse-operator-packet-count-packet bits)
+       (= 1 (nth bits (+ VERSION-BIT-LENGTH TYPE-ID-BIT-LENGTH)))
+       (parse-operator-packet-count-packet bits)
 
-    (operator-bit-length-packet? bits)
-    (parse-operator-bit-length-packet bits)))
+       (= 0 (nth bits (+ VERSION-BIT-LENGTH TYPE-ID-BIT-LENGTH)))
+       (parse-operator-bit-length-packet bits)))))
 
 
 #_(clojure.pprint/pprint (parse-packet (mapcat hex->bits "620080001611562C8802118E34")))
@@ -211,53 +221,44 @@
              1 0 0 ;; type-id 4 (value)
              0 0 0 1 0]))))
 
- (testing "operator-packet-count-packet?"
-   (is (= true
-         (operator-packet-count-packet? [0 0 1 ;; version
-                                         0 1 0 ;; type-id 2 (minimum)
-                                         1 ;; packet-length-id (packet count)
-                                         0 0 0 0 0 0 0 0 0 0 1 ;; number of packets
-                                           0 0 1 ;; version
-                                           1 0 0 ;; type-id 4 (value)
-                                           0 0 0 0 1])))))
-(testing "parse-packet"
- (is (= {:version 1
-         :type-id 2
-         :length 29
-         :packets [{:version 1
-                    :type-id 4
-                    :length 11
-                    :value 1}]}
-        (parse-packet [0 0 1 ;; version
-                       0 1 0 ;; type-id 2 (minimum)
-                       1 ;; packet-length-id (packet count)
-                       0 0 0 0 0 0 0 0 0 0 1 ;; number of packets
-                         0 0 1 ;; version
-                         1 0 0 ;; type-id 4 (value)
-                         0 0 0 0 1])))) ;; 1
+ (testing "parse-packet"
+  (is (= {:version 1
+          :type-id 2
+          :length 29
+          :packets [{:version 1
+                     :type-id 4
+                     :length 11
+                     :value 1}]}
+         (parse-packet [0 0 1 ;; version
+                        0 1 0 ;; type-id 2 (minimum)
+                        1 ;; packet-length-id (packet count)
+                        0 0 0 0 0 0 0 0 0 0 1 ;; number of packets
+                          0 0 1 ;; version
+                          1 0 0 ;; type-id 4 (value)
+                          0 0 0 0 1])))) ;; 1
 
-(testing "parse-packet"
- (is (= {:version 1
-         :type-id 2
-         :length 40
-         :packets [{:version 1
-                    :type-id 4
-                    :length 11
-                    :value 1}
-                   {:version 1
-                    :type-id 4
-                    :length 11
-                    :value 2}]}
-        (parse-packet [0 0 1 ;; version
-                       0 1 0 ;; type-id 2 (minimum)
-                       1 ;; packet-length-id (packet count)
-                       0 0 0 0 0 0 0 0 0 1 0 ;; number of packets
-                         0 0 1 ;; version
-                         1 0 0 ;; type-id 4 (value)
-                         0 0 0 0 1
+ (testing "parse-packet"
+  (is (= {:version 1
+          :type-id 2
+          :length 40
+          :packets [{:version 1
+                     :type-id 4
+                     :length 11
+                     :value 1}
+                    {:version 1
+                     :type-id 4
+                     :length 11
+                     :value 2}]}
+         (parse-packet [0 0 1 ;; version
+                        0 1 0 ;; type-id 2 (minimum)
+                        1 ;; packet-length-id (packet count)
+                        0 0 0 0 0 0 0 0 0 1 0 ;; number of packets
+                          0 0 1 ;; version
+                          1 0 0 ;; type-id 4 (value)
+                          0 0 0 0 1
 
-                         0 0 1 ;; version
-                         1 0 0 ;; type-id 4 (value)
-                         0 0 0 1 0])))) ;; 1
+                          0 0 1 ;; version
+                          1 0 0 ;; type-id 4 (value)
+                          0 0 0 1 0]))))) ;; 1
 
 (run-tests)
