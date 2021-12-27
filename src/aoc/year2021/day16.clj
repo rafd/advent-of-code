@@ -19,10 +19,7 @@
 
 (defn bits->int [bits]
   ;; so dirty
-  (BigInteger. (apply str bits) 2))
-
-(defn take-split [n bits]
-  [(take n bits) (drop n bits)])
+  (BigInteger. ^String (apply str bits) 2))
 
 (defn update-at [coll address & args]
   (if (empty? address)
@@ -59,7 +56,7 @@
     output
     (case current
       :s/version
-      (let [[version-bits rest-bits] (take-split 3 bits)]
+      (let [[version-bits rest-bits] (split-at 3 bits)]
        (recur (-> output
                   (update-at address assoc :version
                              (bits->int version-bits))
@@ -71,7 +68,7 @@
               :s/type-id
               rest-bits))
       :s/type-id
-      (let [[type-id-bits rest-bits] (take-split 3 bits)
+      (let [[type-id-bits rest-bits] (split-at 3 bits)
             type-id (bits->int type-id-bits)]
        (recur (-> output
                   (update-at address assoc :type-id type-id))
@@ -81,7 +78,7 @@
                 :s/length-id)
               rest-bits))
       :s/value
-      (let [[value-bits rest-bits] (take-split 5 bits)]
+      (let [[value-bits rest-bits] (split-at 5 bits)]
        (case (first value-bits)
         0
         (recur
@@ -146,7 +143,7 @@
             :s/subpacket-packet-length
             (rest bits))))
       :s/subpacket-bit-length
-      (let [[length-bits rest-bits] (take-split 15 bits)]
+      (let [[length-bits rest-bits] (split-at 15 bits)]
        (recur
          (-> output
              (update-at address assoc :packets [])
@@ -156,7 +153,7 @@
          :s/version
          rest-bits))
       :s/subpacket-packet-length
-      (let [[length-bits rest-bits] (take-split 11 bits)]
+      (let [[length-bits rest-bits] (split-at 11 bits)]
        (recur
          (-> output
              (update-at address assoc :packets [])
@@ -166,22 +163,22 @@
          rest-bits))))))
 
 (def hex->bits
-  {"0" '(0 0 0 0)
-   "1" '(0 0 0 1)
-   "2" '(0 0 1 0)
-   "3" '(0 0 1 1)
-   "4" '(0 1 0 0)
-   "5" '(0 1 0 1)
-   "6" '(0 1 1 0)
-   "7" '(0 1 1 1)
-   "8" '(1 0 0 0)
-   "9" '(1 0 0 1)
-   "A" '(1 0 1 0)
-   "B" '(1 0 1 1)
-   "C" '(1 1 0 0)
-   "D" '(1 1 0 1)
-   "E" '(1 1 1 0)
-   "F" '(1 1 1 1)})
+  {\0 '(0 0 0 0)
+   \1 '(0 0 0 1)
+   \2 '(0 0 1 0)
+   \3 '(0 0 1 1)
+   \4 '(0 1 0 0)
+   \5 '(0 1 0 1)
+   \6 '(0 1 1 0)
+   \7 '(0 1 1 1)
+   \8 '(1 0 0 0)
+   \9 '(1 0 0 1)
+   \A '(1 0 1 0)
+   \B '(1 0 1 1)
+   \C '(1 1 0 0)
+   \D '(1 1 0 1)
+   \E '(1 1 1 0)
+   \F '(1 1 1 1)})
 
 (defn count-versions [tree]
   (let [counts (atom 0)]
@@ -208,18 +205,19 @@
                     x))
                  tree))
 
-
-#_(->> (clojure.string/split "620080001611562C8802118E34" #"")
+#_(->> (clojure.string/split "620080001611562C8802118E34" #" ")
        (mapcat hex->bits)
        parse-packets
        clojure.pprint/pprint)
 
-#_(->> (parse-input 2021 "16" "")
+#_(->> (parse-input 2021 "16" " ")
+       first
        (mapcat hex->bits)
        parse-packets
        count-versions)
 
-#_(->> (parse-input 2021 "16" "")
+#_(->> (parse-input 2021 "16" " ")
+       first
        (mapcat hex->bits)
        parse-packets
        do-the-math)
