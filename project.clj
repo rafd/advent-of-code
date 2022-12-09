@@ -6,4 +6,4 @@
                  [com.rpl/specter "1.1.4"]]
 
   ;; LEIN_USE_BOOTCLASSPATH=no lein repl
-  :plugins [[venantius/ultra "0.6.0"]])
+  #_#_:plugins [[venantius/ultra "0.6.0"]])
