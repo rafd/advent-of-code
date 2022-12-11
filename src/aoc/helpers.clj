@@ -3,9 +3,11 @@
     [clojure.string :as string]
     [clojure.java.io :as io]))
 
+(defn raw-input [year day]
+  (slurp (io/resource (str "inputs/" year "day" day ".txt"))))
+
 (defn get-input [year day]
- (-> (slurp (io/resource (str "inputs/" year "day" day ".txt")))
-     (string/trim)))
+ (string/trim (raw-input year day)))
 
 (defn parse-input [year day deliminator]
   (-> (get-input year day)
