@@ -1,10 +1,8 @@
 (ns aoc.year2022.day3
   (:require
    [clojure.set :as set]
-   [clojure.string :as string]
    [aoc.helpers :as h]
-   [hyperfiddle.rcf :refer [tests]]
-   [com.rpl.specter :as x]))
+   [hyperfiddle.rcf :refer [tests]]))
 
 (defn priority [letter]
   (if (re-matches #"[A-Z]" (str letter))
