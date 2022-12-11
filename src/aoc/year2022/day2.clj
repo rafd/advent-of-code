@@ -10,7 +10,7 @@
    :play/paper :play/scissors
    :play/rock :play/paper})
 
-(defn result 
+(defn result
   [[them us]]
   (cond
     (= them us)
@@ -34,7 +34,7 @@
   (+ (result-points (result [them us]))
      (play-points us)))
 
-(defn day2part1 [input]
+(defn part1 [input]
   (->> input
        (x/transform [x/ALL] #(string/split % #" "))
        (x/transform [x/ALL x/ALL] {"A" :play/rock
@@ -47,11 +47,11 @@
        (reduce +)))
 
 (tests
- (day2part1 (h/parse-input 2022 "2example" "\n")) := 15)
+ (part1 (h/parse-input 2022 "2example" "\n")) := 15)
 
-#_(day2part1 (h/parse-input 2022 2 "\n"))
+#_(part1 (h/parse-input 2022 2 "\n"))
 
-(defn day2part2 [input]
+(defn part2 [input]
   (->> input
        (x/transform [x/ALL] #(string/split % #" "))
        (x/transform [x/ALL x/ALL] {"A" :play/rock
@@ -72,6 +72,6 @@
        (reduce +)))
 
 (tests
- (day2part2 (h/parse-input 2022 "2example" "\n")) := 12)
+ (part2 (h/parse-input 2022 "2example" "\n")) := 12)
 
-#_(day2part2 (h/parse-input 2022 2 "\n"))
+#_(part2 (h/parse-input 2022 2 "\n"))

@@ -11,12 +11,12 @@
       (->> (map (fn [x]
                   (reduce + (map (fn [y] (Integer. y))
                                  (string/split x #"\n"))))))))
-(defn day1part1
+(defn part1
   [input-string]
   (->> (parse input-string)
        (apply max)))
 
-(defn day1part2
+(defn part2
   [input-string]
   (->> (parse input-string)
        (sort)
@@ -24,13 +24,13 @@
        (reduce +)))
 
 (tests
- (day1part1 (h/get-input 2022 "1example")) := 24000
- (day1part2 (h/get-input 2022 "1example")) := 45000)
+ (part1 (h/get-input 2022 "1example")) := 24000
+ (part2 (h/get-input 2022 "1example")) := 45000)
 
-#_(day1part1 (h/get-input 2022 1))
-#_(day1part2 (h/get-input 2022 1))
+#_(part1 (h/get-input 2022 1))
+#_(part2 (h/get-input 2022 1))
 
-(defn day1part1spectre [input-string]
+(defn part1spectre [input-string]
   (->> input-string
        (x/transform [] #(string/split % #"\n\n"))
        (x/transform [x/ALL] #(string/split % #"\n"))
@@ -38,7 +38,7 @@
        (x/transform [x/ALL] #(reduce + %))
        (apply max)))
 
-(defn day1part2spectre [input-string]
+(defn part2spectre [input-string]
   (->> input-string
        (x/transform [] #(string/split % #"\n\n"))
        (x/transform [x/ALL] #(string/split % #"\n"))
@@ -49,5 +49,5 @@
        (reduce +)))
 
 (tests
-  (day1part1spectre (h/get-input 2022 "1example")) := 24000
-  (day1part2spectre (h/get-input 2022 "1example")) := 45000)
+  (part1spectre (h/get-input 2022 "1example")) := 24000
+  (part2spectre (h/get-input 2022 "1example")) := 45000)
