@@ -1,5 +1,5 @@
 (defproject aoc "0.1.0-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.10.3"]
+  :dependencies [[org.clojure/clojure "1.11.0"]
                  [org.clojure/data.priority-map "1.1.0"]
                  [org.clojure/math.combinatorics "0.1.6"]
                  [com.hyperfiddle/rcf "20220926-202227"]
