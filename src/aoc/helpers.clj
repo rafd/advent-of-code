@@ -3,6 +3,8 @@
     [clojure.string :as string]
     [clojure.java.io :as io]))
 
+(set! *print-namespace-maps* false)
+
 (defn raw-input [year day]
   (slurp (io/resource (str "inputs/" year "day" day ".txt"))))
 
