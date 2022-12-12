@@ -19,13 +19,8 @@
   (let [stack-count (Integer. ^java.lang.String (second (re-find #"(\d+)\s*$" input)))]
     (->> (string/split input #"\n")
          butlast  ;; skip 1 2 3...
-         (map (fn [line]
-                (partition-all 3 4 line)))
-         (x/transform [x/ALL x/ALL] second)
-         (x/transform [x/ALL x/ALL] (fn [x]
-                                      (if (= x \space)
-                                        nil
-                                        x)))
+         (map (fn [line] (map second (re-seq #"(?:   )|(?:\[(.)\]) ?" line))))
+         ;; ((nil "D") ("N" "C") ("Z" "M" "P"))
          (map (partial pad-nils stack-count))
          transpose
          (map reverse)
@@ -34,9 +29,9 @@
 
 (tests
  (parse-crate-stacks "    [D]\n[N] [C]\n[Z] [M] [P]\n 1   2   3")
- := [[\Z \N]
-     [\M \C \D]
-     [\P]])
+ := [["Z" "N"]
+     ["M" "C" "D"]
+     ["P"]])
 
 (defn crate-mover [input ^long version]
   (let [move-fn (case version
