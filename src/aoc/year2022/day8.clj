@@ -73,9 +73,13 @@
        (filter true?)
        count))
 
-(defn part1 [input]
+(defn parse-grid [input]
   (->> (string/split input #"\n")
-       (map (fn [row] (map #(Integer. ^java.lang.String %) (string/split row #""))))
+       (map (fn [row] (map #(Integer. ^java.lang.String %) (string/split row #""))))))
+
+(defn part1 [input]
+  (->> input
+       parse-grid
        count-visible))
 
 (tests
@@ -84,3 +88,38 @@
  (part1 (h/get-input 2022 "8example")) := 21)
 
 #_(part1 (h/get-input 2022 8))
+
+(defn viewing-distance
+  [treehouse-height trees]
+  (reduce (fn [memo x]
+            (if (< x treehouse-height)
+              (inc memo)
+              (reduced (inc memo))))
+          0
+          trees))
+
+(defn partial-scenic-scores [row]
+  (for [x (range 0 (count row))]
+    (let [treehouse-height (nth row x)
+          looking-left (reverse (take x row))
+          looking-right (drop (inc x) row)
+          left-distance (viewing-distance treehouse-height looking-left)
+          right-distance (viewing-distance treehouse-height looking-right)]
+      (* left-distance right-distance))))
+
+(tests
+ (partial-scenic-scores [1 2 3]) := [0 1 0])
+
+(defn part2 [input]
+  (let [grid (parse-grid input)
+        row-scores (map partial-scenic-scores grid)
+        col-scores (transpose (map partial-scenic-scores (transpose grid)))
+        scenic-scores (map #(map * %1 %2) row-scores col-scores)]
+    (->> scenic-scores
+         flatten
+         (apply max))))
+
+(tests
+ (part2 (h/get-input 2022 "8example")) := 8)
+
+#_(part2 (h/get-input 2022 8))
