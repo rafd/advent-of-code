@@ -14,3 +14,6 @@
 (defn parse-input [year day deliminator]
   (-> (get-input year day)
       (string/split (re-pattern deliminator))))
+
+(defn rsplit [split-string source-string]
+  (string/split source-string (re-pattern split-string)))
