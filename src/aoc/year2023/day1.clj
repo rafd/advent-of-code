@@ -12,15 +12,24 @@
                  (last numbers))))
        (reduce +)))
 
-(defn process-line [line]
+(defn extract-integers [line]
   (->> line
-       (filter #{\1 \2 \3 \4 \5 \6 \7 \8 \9 \0})
-       (map (fn [i] (Integer. (str i))))))
+       (keep (fn [i] (try
+                       (Integer. (str i))
+                       (catch Exception _
+                         nil))))))
+
+(tests
+ (extract-integers "2ab3cd") := [2 3])
 
 (defn part1 [input]
   (->> input
-       (map process-line)
+       (map extract-integers)
        finalize))
+
+(tests
+ (part1 (h/parse-input 2023 "1example" "\n"))
+ := 142)
 
 #_(part1 (h/parse-input 2023 1 "\n")) ;; 55017
 
@@ -45,21 +54,18 @@
 (defn part2 [input]
   (->> input
        (map pre-process)
-       (map process-line)
+       (map extract-integers)
        finalize))
 
-#_(part2 (h/parse-input 2023 1 "\n")) ;; 53539
-
 (tests
- (part1 (h/parse-input 2023 "1example" "\n"))
- := 142
-
  (part2 (h/parse-input 2023 "1example2" "\n"))
  := 281)
 
+#_(part2 (h/parse-input 2023 1 "\n")) ;; 53539
+
 ;;;;;;;; V2
 
-(def str->num
+(def str->int
   {"one" 1
    "two" 2
    "three" 3
@@ -84,7 +90,8 @@
   (= needle
      (take (count needle) haystack)))
 
-(defn parse-line [line]
+(defn extract-integers-v2
+  [line]
   (loop [line (seq line)
          out []]
     (if (seq line)
@@ -92,17 +99,17 @@
              (if-let [value (some (fn [[match replacement]]
                                     (when (vector-starts-with? line (seq match))
                                       replacement))
-                                  str->num)]
+                                  str->int)]
                (conj out value)
                out))
       out)))
 
 (tests
- (parse-line "2oneight3") := [2 1 8 3])
+ (extract-integers-v2 "2oneight3") := [2 1 8 3])
 
 (defn part2v2 [input]
   (->> input
-       (map parse-line)
+       (map extract-integers-v2)
        finalize))
 
 (tests
