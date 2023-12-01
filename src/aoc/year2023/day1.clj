@@ -72,16 +72,21 @@
    "8" 8
    "9" 9})
 
+(defn vector-starts-with?
+  [haystack needle]
+  (= needle
+     (take (count needle) haystack)))
+
 (defn parse-line [line]
-  (loop [line line
+  (loop [line (seq line)
          out []]
     (if (seq line)
-      (if-let [value (reduce (fn [_memo [match replacement]]
-                               (when (string/starts-with? line match)
-                                 (reduced replacement))) nil str->num)]
-        (recur (apply str (rest line))
-               (conj out value))
-        (recur (apply str (rest line))
+      (recur (rest line)
+             (if-let [value (some (fn [[match replacement]]
+                                    (when (vector-starts-with? line (seq match))
+                                      replacement))
+                                  str->num)]
+               (conj out value)
                out))
       out)))
 
