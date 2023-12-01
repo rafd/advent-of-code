@@ -4,21 +4,28 @@
    [clojure.string :as string]
    [hyperfiddle.rcf :refer [tests]]))
 
+(defn finalize
+  [lines-of-numbers]
+  (->> lines-of-numbers
+       (map (fn [numbers]
+              (+ (* 10 (first numbers))
+                 (last numbers))))
+       (reduce +)))
+
 (defn process-line [line]
-  (let [numbers (->> line
-                     (filter #{\1 \2 \3 \4 \5 \6 \7 \8 \9 \0})
-                     (map (fn [i] (Integer. (str i)))))]
-    (+ (* 10 (first numbers))
-       (last numbers))))
+  (->> line
+       (filter #{\1 \2 \3 \4 \5 \6 \7 \8 \9 \0})
+       (map (fn [i] (Integer. (str i))))))
 
 (defn part1 [input]
   (->> input
        (map process-line)
-       (reduce +)))
+       finalize))
 
 #_(part1 (h/parse-input 2023 1 "\n")) ;; 55017
 
-(defn replacement [line]
+(defn pre-process
+  [line]
   (reduce (fn [memo [text replace]]
             (string/replace memo text replace))
           line
@@ -33,13 +40,13 @@
            "nine" "ni9ne"}))
 
 (tests
- (replacement "eightwo") := "eig8ht2wo")
+ (pre-process "eightwo") := "eig8ht2wo")
 
 (defn part2 [input]
   (->> input
-       (map replacement)
+       (map pre-process)
        (map process-line)
-       (reduce +)))
+       finalize))
 
 #_(part2 (h/parse-input 2023 1 "\n")) ;; 53539
 
@@ -96,10 +103,7 @@
 (defn part2v2 [input]
   (->> input
        (map parse-line)
-       (map (fn [numbers]
-              (+ (* 10 (first numbers))
-                 (last numbers))))
-       (reduce +)))
+       finalize))
 
 (tests
  (part2v2 (h/parse-input 2023 "1example2" "\n"))
