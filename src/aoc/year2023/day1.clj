@@ -14,10 +14,7 @@
 
 (defn extract-integers [line]
   (->> line
-       (keep (fn [i] (try
-                       (Integer. (str i))
-                       (catch Exception _
-                         nil))))))
+       (keep (fn [i] (parse-long (str i))))))
 
 (tests
  (extract-integers "2ab3cd") := [2 3])

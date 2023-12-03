@@ -11,14 +11,14 @@
 
 (defn parse-line [line]
   (let [[_ game-id draws] (re-matches #"Game (\d+): (.*)" line)]
-    [(Integer/parseInt game-id)
+    [(parse-long game-id)
      (->> (string/split draws #";")
           (map (fn [draw-string]
                  (->> (string/split draw-string #",")
                       (map string/trim)
                       (map (fn [color-and-count-string]
                              (let [[_ count color] (re-matches #"(\d+) ([a-z]+)" color-and-count-string)]
-                               [(keyword color) (Integer/parseInt count)])))
+                               [(keyword color) (parse-long count)])))
                       (into {})))))]))
 
 (defn eligible? [bag draw]
