@@ -7,14 +7,14 @@
 
 (defn parse-line [line]
   (let [[_ id winning-numbers our-numbers] (re-matches #"Card +(\d+): ([0-9 ]+)\|([0-9 ]+)" line)]
-    {:card-id (parse-long id)
-     :winning-numbers (set (keep parse-long (string/split winning-numbers #" ")))
-     :our-numbers (set (keep parse-long (string/split our-numbers #" ")))}))
+    {:card/id (parse-long id)
+     :card/winning-numbers (set (keep parse-long (string/split winning-numbers #" ")))
+     :card/our-numbers (set (keep parse-long (string/split our-numbers #" ")))}))
 
 (defn part1 [input]
   (->> input
        (map parse-line)
-       (map (fn [{:keys [winning-numbers our-numbers]}]
+       (map (fn [{:card/keys [winning-numbers our-numbers]}]
               (if (= 0 (count (set/intersection winning-numbers our-numbers)))
                 0
                 (Math/pow 2 (dec (count (set/intersection winning-numbers our-numbers)))))))
@@ -28,10 +28,10 @@
 
 (defn won-cards
   [cards card-id]
-  (let [{:keys [winning-numbers our-numbers]} (get cards (dec card-id))
+  (let [{:card/keys [winning-numbers our-numbers]} (get cards (dec card-id))
         matching-count (count (set/intersection winning-numbers our-numbers))]
     (+ 1
-       ;; don't need to handle cards being out of range
+       ;; cards are guaranteed to not be out of range
        (reduce + (for [x (range (inc card-id)
                                 (+ card-id matching-count 1))]
                    (won-cards cards x))))))
@@ -43,7 +43,7 @@
                    (mapv parse-line))]
     (->> cards
          (map (fn [card]
-                (won-cards-memo cards (:card-id card))))
+                (won-cards-memo cards (:card/id card))))
          (reduce +))))
 
 (r/tests
