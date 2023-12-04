@@ -24,7 +24,7 @@
 (r/tests
  (part1 (h/parse-input 2023 "4example" "\n")) := 13)
 
-#_(part1 (h/parse-input 2023 4 "\n"))
+#_(part1 (h/parse-input 2023 4 "\n")) ;; 25231
 
 (defn won-cards
   [cards card-id]
@@ -49,4 +49,4 @@
 (r/tests
  (part2 (h/parse-input 2023 "4example" "\n")) := 30)
 
-#_(part2 (h/parse-input 2023 4 "\n"))
+#_(part2 (h/parse-input 2023 4 "\n")) ;; 9721255
