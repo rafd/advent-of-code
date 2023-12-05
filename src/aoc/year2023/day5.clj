@@ -13,37 +13,36 @@
         maps (->> (rest input)
                   (map (fn [m]
                          (let [[what-to-what & rows] (string/split m #"\n")
-                               [_ a b] (re-matches #"([a-z]+)-to-([a-z]+) map:" what-to-what)
-                               rows (->> rows
-                                         (map (fn [r]
-                                                (let [[destination source range] (map parse-long (string/split r #" "))]
-                                                  {:source source
-                                                   :destination destination
-                                                   :range range}))))]
-                           {:from a
-                            :to b
-                            :rows rows})))
+                               [_ a b] (re-matches #"([a-z]+)-to-([a-z]+) map:" what-to-what)]
+                           {:map/from a
+                            :map/to b
+                            :map/ranges (->> rows
+                                             (map (fn [r]
+                                                    (let [[destination source length] (map parse-long (string/split r #" "))]
+                                                      {:range/source source
+                                                       :range/destination destination
+                                                       :range/length length}))))})))
                   doall)
-        convert (fn convert [from to value]
+        convert (fn [from to value]
                   (let [map (->> maps
                                  (filter (fn [m]
-                                           (= from (:from m))))
+                                           (= from (:map/from m))))
                                  first)
-                        zone (->> (:rows map)
-                                  (sort-by :source)
-                                  (take-while (fn [{:keys [source]}]
+                        range (->> (:map/ranges map)
+                                  (sort-by :range/source)
+                                  (take-while (fn [{:range/keys [source]}]
                                                 (<= source value)))
                                   last)
                         new-value (cond
-                                    (nil? zone)
+                                    (nil? range)
                                     value
-                                    (<= value (+ (:source zone) (:range zone)))
-                                    (+ (:destination zone) value (- (:source zone)))
+                                    (<= value (+ (:range/source range) (:range/length range)))
+                                    (+ (:range/destination range) value (- (:range/source range)))
                                     :else
                                     value)]
-                    (if (= to (:to map))
+                    (if (= to (:map/to map))
                       new-value
-                      (recur (:to map) to new-value))))]
+                      (recur (:map/to map) to new-value))))]
     (->> seeds
          (map (fn [seed]
                   (convert "seed" "location" seed)))
@@ -60,40 +59,39 @@
                    (partition 2)
                    (mapcat (fn [[start cnt]]
                              (range start (+ start cnt)))))
-        maps (->> (rest input)
+         maps (->> (rest input)
                   (map (fn [m]
                          (let [[what-to-what & rows] (string/split m #"\n")
-                               [_ a b] (re-matches #"([a-z]+)-to-([a-z]+) map:" what-to-what)
-                               rows (->> rows
-                                         (map (fn [r]
-                                                (let [[destination source range] (map parse-long (string/split r #" "))]
-                                                  {:source source
-                                                   :destination destination
-                                                   :range range}))))]
-                           {:from a
-                            :to b
-                            :rows rows})))
+                               [_ a b] (re-matches #"([a-z]+)-to-([a-z]+) map:" what-to-what)]
+                           {:map/from a
+                            :map/to b
+                            :map/ranges (->> rows
+                                             (map (fn [r]
+                                                    (let [[destination source length] (map parse-long (string/split r #" "))]
+                                                      {:range/source source
+                                                       :range/destination destination
+                                                       :range/length length}))))})))
                   doall)
-        convert (fn convert [from to value]
+        convert (fn [from to value]
                   (let [map (->> maps
                                  (filter (fn [m]
-                                           (= from (:from m))))
+                                           (= from (:map/from m))))
                                  first)
-                        zone (->> (:rows map)
-                                  (sort-by :source)
-                                  (take-while (fn [{:keys [source]}]
-                                                (<= source value)))
-                                  last)
+                        range (->> (:map/ranges map)
+                                   (sort-by :range/source)
+                                   (take-while (fn [{:range/keys [source]}]
+                                                 (<= source value)))
+                                   last)
                         new-value (cond
-                                    (nil? zone)
+                                    (nil? range)
                                     value
-                                    (<= value (+ (:source zone) (:range zone)))
-                                    (+ (:destination zone) value (- (:source zone)))
+                                    (<= value (+ (:range/source range) (:range/length range)))
+                                    (+ (:range/destination range) value (- (:range/source range)))
                                     :else
                                     value)]
-                    (if (= to (:to map))
+                    (if (= to (:map/to map))
                       new-value
-                      (recur (:to map) to new-value))))]
+                      (recur (:map/to map) to new-value))))]
     (->> seeds
          (map (fn [seed]
                 (convert "seed" "location" seed)))
