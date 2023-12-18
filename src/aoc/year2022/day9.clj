@@ -15,7 +15,7 @@
                 (Math/pow y 2))))
 
 (defn normalize [^java.lang.Integer x]
-  (if (zero? x) 0 (/ x (Math/abs x))))
+  (if (zero? x) 0 (/ x (abs x))))
 
 (defn part1v0 [input]
   (->> input

@@ -31,8 +31,8 @@
 #_(vec* 2 [4 5 6])
 
 (defn distance [[x y]]
-  (+ (Math/abs x)
-     (Math/abs y)))
+  (+ (abs x)
+     (abs y)))
 
 ;; part 1
 

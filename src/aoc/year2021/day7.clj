@@ -9,7 +9,7 @@
         median (nth crabs (int (/ (count crabs)
                                   2)))
         fuel (->> crabs
-                  (map #(Math/abs (- % median)))
+                  (map #(abs (- % median)))
                   (reduce +))]
        fuel)
 
@@ -21,7 +21,7 @@
                (count crabs))
         positions [(Math/floor avg) (Math/ceil avg)]
         cost (fn [a x]
-               (* (Math/abs (- a x)) (+ (Math/abs (- a x)) 1) 0.5))
+               (* (abs (- a x)) (+ (abs (- a x)) 1) 0.5))
         fuel-costs (map (fn [proposed-position]
                          (reduce + (map (partial cost proposed-position) crabs)))
                         positions)]
@@ -33,7 +33,7 @@
                     (map parse-long))
          positions (range (apply min crabs) (inc (apply max crabs)))
          cost (fn [a x]
-                (* (Math/abs (- a x)) (+ (Math/abs (- a x)) 1) 0.5))
+                (* (abs (- a x)) (+ (abs (- a x)) 1) 0.5))
          fuel-costs (map (fn [proposed-position]
                           (reduce + (map (partial cost proposed-position) crabs)))
                          positions)]

@@ -7,9 +7,9 @@
 
 (defn width-at-y
   [slice-y [sensor-x sensor-y] [beacon-x beacon-y]]
-  (let [distance (+ (Math/abs ^java.lang.Integer (- sensor-x beacon-x))
-                    (Math/abs ^java.lang.Integer (- sensor-y beacon-y)))
-        leftover (- distance (Math/abs ^java.lang.Integer (- slice-y sensor-y)))]
+  (let [distance (+ (abs (- sensor-x beacon-x))
+                    (abs (- sensor-y beacon-y)))
+        leftover (- distance (abs (- slice-y sensor-y)))]
     (set (range (- sensor-x leftover) (inc (+ sensor-x leftover))))))
 
 (defn beaconless-points
@@ -130,9 +130,9 @@
 
 (defn range-at-y-fast
   [slice-y [sensor-x sensor-y] [beacon-x beacon-y]]
-  (let [distance (+ (Math/abs ^java.lang.Integer (- sensor-x beacon-x))
-                    (Math/abs ^java.lang.Integer  (- sensor-y beacon-y)))
-        leftover (- distance (Math/abs ^java.lang.Integer (- slice-y sensor-y)))]
+  (let [distance (+ (abs (- sensor-x beacon-x))
+                    (abs  (- sensor-y beacon-y)))
+        leftover (- distance (abs (- slice-y sensor-y)))]
     (when (<= 0 leftover)
       [(- sensor-x leftover) (+ sensor-x leftover)])))
 
