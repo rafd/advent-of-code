@@ -12,7 +12,7 @@
        (map (fn [line]
               (->> (re-matches #"(\d+)-(\d+),(\d+)-(\d+)" line)
                    rest
-                   (map #(Integer. %))
+                   (map parse-long)
                    (apply fully-contained?))))
        (filter true?)
        count))
@@ -33,7 +33,7 @@
        (map (fn [line]
               (->> (re-matches #"(\d+)-(\d+),(\d+)-(\d+)" line)
                    rest
-                   (map #(Integer. %))
+                   (map parse-long)
                    (apply overlap?))))
        (filter true?)
        count))

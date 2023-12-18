@@ -13,7 +13,7 @@
   (apply comp (repeat times f)))
 
 #_(->> (parse-input 2021 6 ",")
-       (map #(Integer. %))
+       (map parse-long)
        frequencies
        #_((repeatedly-apply 80 next-day)) ;; part 1
        ((repeatedly-apply 256 next-day)) ;; part 2

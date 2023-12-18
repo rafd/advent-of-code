@@ -6,7 +6,7 @@
 (defn part1 [input]
   (->> (string/split input #"\n")
        (map (fn [line]
-             (sort (map #(Integer. %) (string/split line #"x")))))
+             (sort (map parse-long (string/split line #"x")))))
        (map (fn [[a b c]]
              (+ (* 3 a b) (* 2 b c) (* 2 a c))))
        (apply +)))
@@ -16,7 +16,7 @@
 (defn part2 [input]
   (->> (string/split input #"\n")
        (map (fn [line]
-             (sort (map #(Integer. %) (string/split line #"x")))))
+             (sort (map parse-long (string/split line #"x")))))
        (map (fn [[a b c]]
              (+ (* 2 (+ a b))
                 (* a b c))))

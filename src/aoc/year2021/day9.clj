@@ -25,11 +25,10 @@
             nil))
        (remove nil?)))
 
-
 ;; part 1
 
 #_(let [grid (->> (parse-input 2021 9 "\n")
-                  (mapv (fn [row] (mapv #(Integer. (str %)) row))))]
+                  (mapv (fn [row] (mapv #(parse-long (str %)) row))))]
     (->> (find-low-cells grid)
          (map (fn [[x y]] (get-height grid x y)))
          (map inc)
@@ -54,7 +53,7 @@
          (expand-basin grid $ x (dec y))))) ;; recur left
 
 #_(let [grid (->> (parse-input 2021 "9" "\n")
-                  (mapv (fn [row] (mapv #(Integer. (str %)) row))))
+                  (mapv (fn [row] (mapv #(parse-long (str %)) row))))
         low-cells (find-low-cells grid)
         basins (map (fn [[x y]] (expand-basin grid #{} x y)) low-cells)]
    (->> (map count basins)

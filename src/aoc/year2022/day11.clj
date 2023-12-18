@@ -12,17 +12,17 @@
               (re-matches #"(?s)Monkey (\d):\n  Starting items: ([0-9, ]+)\n  Operation: new = old (.+?)\n  Test: divisible by (\d+)\n    If true: throw to monkey (\d)\n    If false: throw to monkey (\d)" monkey-string)))
        (map (fn [[_ id starting-items operation divisor true-monkey-target false-monkey-target]]
               (let [[_ string-operator string-value] (re-matches #"(\+|\*) (.*)" operation)]
-                {:raw-monkey/id (Integer/parseInt id)
-                 :raw-monkey/starting-items (map #(Integer/parseInt %) (string/split starting-items #", "))
+                {:raw-monkey/id (parse-long id)
+                 :raw-monkey/starting-items (map parse-long (string/split starting-items #", "))
                  :raw-monkey/worry-operator (case string-operator
                                               "*" *
                                               "+" +)
                  :raw-monkey/worry-value (if (= "old" string-value)
                                            (fn [old] old)
-                                           (fn [_old] (Integer/parseInt string-value)))
-                 :raw-monkey/divisor (Integer/parseInt divisor)
-                 :raw-monkey/true-monkey-target (Integer/parseInt true-monkey-target)
-                 :raw-monkey/false-monkey-target (Integer/parseInt false-monkey-target)})))))
+                                           (fn [_old] (parse-long string-value)))
+                 :raw-monkey/divisor (parse-long divisor)
+                 :raw-monkey/true-monkey-target (parse-long true-monkey-target)
+                 :raw-monkey/false-monkey-target (parse-long false-monkey-target)})))))
 
 (defn finalize-monkeys
   [raw-monkeys post-worry-fn]

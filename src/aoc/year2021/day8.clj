@@ -62,7 +62,7 @@
                                                       (map (fn [s] (map set (string/split s #" ")))))
        decryption-key (analyze-row signal-segment-sets)
        decrypted-values (map (partial decrypt decryption-key) output-segment-sets)]
-   (Integer. (apply str decrypted-values))))
+   (parse-long (apply str decrypted-values))))
 
 #_(decrypt-input-row "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe")
 

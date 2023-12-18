@@ -8,7 +8,7 @@
 
 (defn part1 [input]
   (->> (string/split input #"\n")
-       (map #(Integer. %))
+       (map parse-long)
        (map calculate-fuel)
        (apply +)))
 
@@ -24,7 +24,7 @@
 
 (defn part2 [input]
   (->> (string/split input #"\n")
-       (map #(Integer. %))
+       (map parse-long)
        (map calculate-fuel-recursive)
        (apply +)))
 

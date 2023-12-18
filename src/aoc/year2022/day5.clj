@@ -16,7 +16,7 @@
  (pad-nils 3 [1]) := [1 nil nil])
 
 (defn parse-crate-stacks [input]
-  (let [stack-count (Integer. ^java.lang.String (second (re-find #"(\d+)\s*$" input)))]
+  (let [stack-count (parse-long (second (re-find #"(\d+)\s*$" input)))]
     (->> (string/split input #"\n")
          butlast  ;; skip 1 2 3...
          (map (fn [line] (map second (re-seq #"(?:   )|(?:\[(.)\]) ?" line))))
@@ -43,7 +43,7 @@
                           (map (fn [line]
                                  (let [[quantity from to] (->> (re-matches #"move (\d+) from (\d+) to (\d+)" line)
                                                                 rest
-                                                                (map (fn [x] (Integer. ^java.lang.String x))))]
+                                                                (map parse-long))]
                                    {:quantity quantity
                                     :from from
                                     :to to}))))]

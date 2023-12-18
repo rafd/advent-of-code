@@ -77,7 +77,7 @@
 #_(manipulate-grid [[8]])
 
 #_(time (let [grid (->> (parse-input 2021 "15" "\n")
-                        (mapv (fn [row] (mapv #(Integer. (str %)) row)))
+                        (mapv (fn [row] (mapv #(parse-long (str %)) row)))
                         manipulate-grid)
               start [0 0]
               end [(dec (count grid))

@@ -40,7 +40,7 @@
  (->> (string/split input #", ")
       (map (fn [instruction]
              {:direction (keyword (str (first instruction)))
-              :magnitude (Integer. (apply str (rest instruction)))}))
+              :magnitude (parse-long (apply str (rest instruction)))}))
       (reduce (fn [{:keys [heading location]} {:keys [direction magnitude]}]
                 (let [new-heading (turn [heading direction])]
                  {:heading new-heading
@@ -69,7 +69,7 @@
  (->> (string/split input #", ")
       (map (fn [instruction]
              {:direction (keyword (str (first instruction)))
-              :magnitude (Integer. (apply str (rest instruction)))}))
+              :magnitude (parse-long (apply str (rest instruction)))}))
       (reduce (fn [{:keys [heading location visited-locations]} {:keys [direction magnitude]}]
                 (let [new-heading (turn [heading direction])
                       new-locations (travel location (heading->unit-vector new-heading) magnitude)

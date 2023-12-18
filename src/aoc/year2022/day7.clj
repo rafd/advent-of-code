@@ -31,7 +31,7 @@
                    :else ; file
                    (let [[_ size file-name] (re-matches #"(\d+) (.+)$" instruction)
                          file-name (keyword "file" file-name)
-                         size (Integer. ^java.lang.String size)]
+                         size (parse-long size)]
                      (assoc-in memo (concat [:tree] (:current-dir memo) [file-name]) size))))
                {:current-dir []
                 :tree {}})

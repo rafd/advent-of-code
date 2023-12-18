@@ -5,12 +5,12 @@
 
 (defn parse-numbers-and-boards [input]
   (let [numbers (->> (string/split (first input) #",")
-                     (map #(Integer. %)))
+                     (map parse-long))
         boards (->> (rest input)
                     (map (fn [board]
                            (->> (string/split board #"\n")
                                 (map (fn [line] (->> (string/split (string/trim line) #" +")
-                                                     (map #(Integer. %)))))))))]
+                                                     (map parse-long))))))))]
        [numbers boards]))
 
 (defn transpose [x]

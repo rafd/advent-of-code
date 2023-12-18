@@ -7,7 +7,7 @@
 
 #_(->> (parse-input 2021 3 "\n")
        (map (fn [binary-string]
-              (map (fn [bit-string] (Integer. bit-string))
+              (map (fn [bit-string] (parse-long bit-string))
                    (string/split binary-string #""))))
        (apply map vector) ;; tranpose
        (map frequencies)

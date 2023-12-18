@@ -34,7 +34,7 @@
        (map (fn [line]
               (->> (re-matches #"Sensor at x=(-?\d+), y=(-?\d+): closest beacon is at x=(-?\d+), y=(-?\d+)" line)
                    rest
-                   (map #(Integer/parseInt %))
+                   (map parse-long)
                    (partition 2))))))
 
 ;; subtract if beacon is on line

@@ -5,7 +5,7 @@
 
 (defn part1 [input]
   (let [numbers (->> (string/split input #"\n")
-                     (map #(Integer. %))
+                     (map parse-long)
                      set)
         a (->> numbers
                (filter (fn [x]
@@ -17,7 +17,7 @@
 
 (defn part2 [input]
   (let [numbers (->> (string/split input #"\n")
-                     (mapv #(Integer. %)))]
+                     (mapv parse-long))]
     (->> (for [i (range 0 (count numbers))
                j (range i (count numbers))
                k (range j (count numbers))]

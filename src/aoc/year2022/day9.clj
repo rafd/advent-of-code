@@ -21,7 +21,7 @@
   (->> input
        (map (partial h/rsplit " "))
        (mapcat (fn [[direction repeat-string]]
-                 (repeat (Integer. ^java.lang.String repeat-string) direction)))
+                 (repeat (parse-long repeat-string) direction)))
        ;; ("R" "L" ...)
        (reductions (fn [memo direction]
 
@@ -42,7 +42,7 @@
   (->> input
        (map (partial h/rsplit " "))
        (mapcat (fn [[direction repeat-string]]
-                 (repeat (Integer. ^java.lang.String repeat-string) direction)))
+                 (repeat (parse-long repeat-string) direction)))
        ;; ("R" "L" ...)
        (reductions (fn [memo direction]
                      (mapv + memo (transforms direction)))
@@ -69,7 +69,7 @@
   (->> input
        (map (partial h/rsplit " "))
        (mapcat (fn [[direction repeat-string]]
-                 (repeat (Integer. ^java.lang.String repeat-string) direction)))
+                 (repeat (parse-long repeat-string) direction)))
        ;; ("R" "L" ...)
        (reductions (fn [memo direction]
                      (mapv + memo (transforms direction)))

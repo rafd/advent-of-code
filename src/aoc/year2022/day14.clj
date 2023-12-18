@@ -19,7 +19,7 @@
        (h/rsplit "\n")
        (map (fn [line]
               (map rest (re-seq #"(\d+),(\d+)" line))))
-       (x/transform [x/ALL x/ALL x/ALL] #(Integer/parseInt %))
+       (x/transform [x/ALL x/ALL x/ALL] parse-long)
        (map (fn [line-pairs]
               (->> line-pairs
                    (partition 2 1)

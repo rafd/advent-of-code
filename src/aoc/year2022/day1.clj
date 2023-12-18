@@ -9,7 +9,7 @@
   (-> input-string
       (string/split #"\n\n")
       (->> (map (fn [x]
-                  (reduce + (map (fn [y] (Integer. y))
+                  (reduce + (map parse-long
                                  (string/split x #"\n"))))))))
 (defn part1
   [input-string]
@@ -34,7 +34,7 @@
   (->> input-string
        (x/transform [] #(string/split % #"\n\n"))
        (x/transform [x/ALL] #(string/split % #"\n"))
-       (x/transform [x/ALL x/ALL] #(Integer. %))
+       (x/transform [x/ALL x/ALL] parse-long)
        (x/transform [x/ALL] #(reduce + %))
        (apply max)))
 
@@ -42,7 +42,7 @@
   (->> input-string
        (x/transform [] #(string/split % #"\n\n"))
        (x/transform [x/ALL] #(string/split % #"\n"))
-       (x/transform [x/ALL x/ALL] #(Integer. %))
+       (x/transform [x/ALL x/ALL] parse-long)
        (x/transform [x/ALL] #(reduce + %))
        (sort)
        (take-last 3)

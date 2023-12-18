@@ -7,7 +7,7 @@
 (defn part1 [input]
   (->> (string/split input #"\n")
        (map (fn [line]
-             (map #(Integer. %) (string/split line #"\t"))))
+             (map parse-long (string/split line #"\t"))))
        (map (fn [line]
              (- (apply max line)
                 (apply min line))))
@@ -18,7 +18,7 @@
 (defn part2 [input]
   (->> (string/split input #"\n")
        (map (fn [line]
-             (map #(Integer. %) (string/split line #"\t"))))
+             (map parse-long (string/split line #"\t"))))
        (map (fn [line]
              (->> (combo/combinations line 2)
                   (map sort)

@@ -5,8 +5,8 @@
 
 (defn parse-line [line]
   (let [[_ param1 param2 char password] (re-matches #"(\d+)-(\d+) (.): (.*)" line)]
-    {:param1 (Integer. param1)
-     :param2 (Integer. param2)
+    {:param1 (parse-long param1)
+     :param2 (parse-long param2)
      :char (first char)
      :password password}))
 

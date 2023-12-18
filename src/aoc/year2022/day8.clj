@@ -75,7 +75,7 @@
 
 (defn parse-grid [input]
   (->> (string/split input #"\n")
-       (map (fn [row] (map #(Integer. ^java.lang.String %) (string/split row #""))))))
+       (map (fn [row] (map parse-long (string/split row #""))))))
 
 (defn part1 [input]
   (->> input

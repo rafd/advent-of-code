@@ -24,14 +24,14 @@
 #_(let [[points instructions] (parse-input 2021 "13" "\n\n")
         points (->> (string/split points #"\n")
                     (map (fn [point-string]
-                          (let [[x y] (mapv #(Integer. %) (string/split point-string #","))]
+                          (let [[x y] (mapv parse-long (string/split point-string #","))]
                             {:x x :y y})))
                     set)
         instructions (->> (string/split instructions #"\n")
                           (map (fn [instruction-string]
                                 (let [[_ axis value] (re-find #"fold along (x|y)=(\d+)" instruction-string)]
                                  {:fold-axis (keyword axis)
-                                  :fold-value (Integer. value)}))))]
+                                  :fold-value (parse-long value)}))))]
     ;; part 1
     #_(count (fold points (first instructions)))
     ;; part 2

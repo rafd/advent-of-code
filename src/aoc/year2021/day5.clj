@@ -4,7 +4,7 @@
     [aoc.helpers :refer [parse-input]]))
 
 (defn string-to-line [string]
-  (map #(Integer. %) (string/split string #"( -> )|,")))
+  (map parse-long (string/split string #"( -> )|,")))
 
 (defn range-inclusive [start end step]
   (if (and (= start end) (zero? step))

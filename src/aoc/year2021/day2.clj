@@ -8,7 +8,7 @@
 #_(->> (parse-input 2021 2 "\n")
        (map (fn [instruction]
              (let [[direction amount] (string/split instruction #" ")]
-               [(keyword direction) (Integer. amount)])))
+               [(keyword direction) (parse-long amount)])))
        (reduce (fn [memo [direction amount]]
                 (case direction
                   :forward (update memo :horizontal-position + amount)
@@ -24,7 +24,7 @@
 #_(->> (parse-input 2021 2 "\n")
        (map (fn [instruction]
              (let [[direction amount] (string/split instruction #" ")]
-               [(keyword direction) (Integer. amount)])))
+               [(keyword direction) (parse-long amount)])))
        (reduce (fn [memo [direction amount]]
                 (case direction
                   :forward (-> memo

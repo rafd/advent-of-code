@@ -57,7 +57,7 @@
        count))
 
 #_(let [initial-grid (-> (parse-input 2021 "11" "\n")
-                         (update-all #(Integer. (str %))))]
+                         (update-all #(parse-long (str %))))]
     (->> (reductions
            (fn [grid _]
              (apply-step grid))
@@ -70,7 +70,7 @@
 ;; part 2
 
 #_(let [initial-grid (-> (parse-input 2021 "11" "\n")
-                         (update-all #(Integer. (str %))))]
+                         (update-all #(parse-long (str %))))]
     (loop [grid initial-grid
            count 0]
       (if (every? zero? (flatten grid))

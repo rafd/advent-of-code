@@ -6,7 +6,7 @@
 ;; part 1 approach 1
 
 (->> (parse-input 2021 1 "\n")
-     (map #(Integer. %))
+     (map parse-long)
      (reduce (fn [memo item]
               {:count (+ (memo :count)
                          (if (and (memo :prev-item)
@@ -19,13 +19,13 @@
 ;; part 1 approach 2
 
 #_(let [numbers (->> (parse-input 2021 1 "\n")
-                     (map (fn [str] (Integer. str))))]
+                     (map parse-long))]
     (count (filter true? (map < numbers (rest numbers)))))
 
 ;; part 2
 
 #_(->> (parse-input 2021 1 "\n")
-       (map (fn [str] (Integer. str)))
+       (map parse-long)
        (partition 3 1)
        (map (partial apply +))
        (partition 2 1)

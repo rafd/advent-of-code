@@ -7,7 +7,7 @@
 
 (defn part1 [input]
   (->> (string/split input #"\n")
-       (map #(Integer. %))
+       (map parse-long)
        (apply +)))
 
 #_(part1 (helpers/get-input 2018 1))
@@ -16,7 +16,7 @@
 
 (defn part2 [input]
   (->> (string/split input #"\n")
-       (map #(Integer. %))
+       (map parse-long)
        cycle
        (reductions +)
        (reduce (fn [seen x]

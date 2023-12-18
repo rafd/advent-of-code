@@ -5,7 +5,7 @@
 
 (defn parse [input]
  (->> (string/split input #",")
-      (mapv #(Integer. %))))
+      (mapv parse-long)))
 
 (def opcode->fn
   {1 +

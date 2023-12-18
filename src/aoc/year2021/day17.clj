@@ -89,7 +89,7 @@
       ;; "x=81..129, y=-150..-108"
       (re-matches #"x=(-?\d+)\.\.(-?\d+), y=(-?\d+)\.\.(-?\d+)")
       rest
-      (map #(Integer. %))))
+      (map parse-long)))
 
 #_(let [target-box (get-target-box) #_[20 30 -10 -5]
         p (set (velocity-bounded-candidates target-box))
