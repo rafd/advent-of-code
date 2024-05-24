@@ -4,7 +4,8 @@
    [aoc.helpers :as helpers]))
 
 (defn part1 [input]
-  (let [numbers (->> (string/split input #"\n")
+  (let [numbers (->> input
+                     string/split-lines
                      (map parse-long)
                      set)
         a (->> numbers
@@ -16,7 +17,8 @@
 #_(part1 (helpers/get-input 2020 1))
 
 (defn part2 [input]
-  (let [numbers (->> (string/split input #"\n")
+  (let [numbers (->> input
+                     string/split-lines
                      (mapv parse-long))]
     (->> (for [i (range 0 (count numbers))
                j (range i (count numbers))

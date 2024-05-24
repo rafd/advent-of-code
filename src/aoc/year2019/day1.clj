@@ -7,7 +7,8 @@
   (- (quot number 3) 2))
 
 (defn part1 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (map parse-long)
        (map calculate-fuel)
        (apply +)))
@@ -23,7 +24,8 @@
 #_(calculate-fuel-recursive 100756)
 
 (defn part2 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (map parse-long)
        (map calculate-fuel-recursive)
        (apply +)))

@@ -8,7 +8,8 @@
                      (map parse-long))
         boards (->> (rest input)
                     (map (fn [board]
-                           (->> (string/split board #"\n")
+                           (->> board
+                                string/split-lines
                                 (map (fn [line] (->> (string/split (string/trim line) #" +")
                                                      (map parse-long))))))))]
        [numbers boards]))

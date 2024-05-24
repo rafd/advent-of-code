@@ -17,7 +17,8 @@
 
 (defn parse-crate-stacks [input]
   (let [stack-count (parse-long (second (re-find #"(\d+)\s*$" input)))]
-    (->> (string/split input #"\n")
+    (->> input
+         string/split-lines
          butlast  ;; skip 1 2 3...
          (map (fn [line] (map second (re-seq #"(?:   )|(?:\[(.)\]) ?" line))))
          ;; ((nil "D") ("N" "C") ("Z" "M" "P"))
@@ -39,7 +40,8 @@
                   9001 identity)
         [crate-stacks-string instructions-string] (string/split input #"\n\n")
         crate-stacks (parse-crate-stacks crate-stacks-string)
-        instructions (->> (string/split instructions-string #"\n")
+        instructions (->> instructions-string
+                          string/split-lines
                           (map (fn [line]
                                  (let [[quantity from to] (->> (re-matches #"move (\d+) from (\d+) to (\d+)" line)
                                                                 rest

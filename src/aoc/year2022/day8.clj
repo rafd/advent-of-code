@@ -74,7 +74,8 @@
        count))
 
 (defn parse-grid [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (map (fn [row] (map parse-long (string/split row #""))))))
 
 (defn part1 [input]

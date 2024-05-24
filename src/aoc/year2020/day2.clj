@@ -18,7 +18,8 @@
       param2))
 
 (defn part1 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (map parse-line)
        (filter valid1?)
        count))
@@ -32,7 +33,8 @@
         (and char2? (not char1?)))))
 
 (defn part2 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (map parse-line)
        (filter valid2?)
        count))

@@ -28,7 +28,8 @@
 #_(apply-line 5 "ULL")
 
 (defn part1 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (reductions apply-line 5)
        rest
        (apply str)))
@@ -59,7 +60,8 @@
        \D \D}})
 
 (defn part2 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (reductions
          (fn [position directions]
 

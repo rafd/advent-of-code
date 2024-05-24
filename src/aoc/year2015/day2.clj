@@ -4,7 +4,8 @@
    [aoc.helpers :as helpers]))
 
 (defn part1 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (map (fn [line]
              (sort (map parse-long (string/split line #"x")))))
        (map (fn [[a b c]]
@@ -14,7 +15,8 @@
 #_(part1 (helpers/get-input 2015 2))
 
 (defn part2 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (map (fn [line]
              (sort (map parse-long (string/split line #"x")))))
        (map (fn [[a b c]]

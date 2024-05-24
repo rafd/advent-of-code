@@ -15,7 +15,8 @@
 
 #_(let [[template rules] (parse-input 2021 "14" "\n\n")
         template (vec template)
-        rules (->> (string/split rules #"\n")
+        rules (->> rules
+                   string/split-lines
                    (map (fn [rule-string]
                           (let [[pair element] (string/split rule-string #" -> ")]
                            [(vec pair) (first element)])))
@@ -84,7 +85,8 @@
         template (->> (concat [nil] (vec template) [nil])
                       (partition 2 1)
                       frequencies)
-        rules (->> (string/split rules #"\n")
+        rules (->> rules
+                   string/split-lines
                    (map (fn [rule-string]
                           (let [[pair element] (string/split rule-string #" -> ")]
                            [(vec pair) (first element)])))

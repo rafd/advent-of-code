@@ -10,7 +10,7 @@
       (string/split #"\n\n")
       (->> (map (fn [x]
                   (reduce + (map parse-long
-                                 (string/split x #"\n"))))))))
+                                 (string/split-lines x))))))))
 (defn part1
   [input-string]
   (->> (parse input-string)

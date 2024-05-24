@@ -22,12 +22,14 @@
       (string/join "\n")))
 
 #_(let [[points instructions] (parse-input 2021 "13" "\n\n")
-        points (->> (string/split points #"\n")
+        points (->> points
+                    string/split-lines
                     (map (fn [point-string]
                           (let [[x y] (mapv parse-long (string/split point-string #","))]
                             {:x x :y y})))
                     set)
-        instructions (->> (string/split instructions #"\n")
+        instructions (->> instructions
+                          string/split-lines
                           (map (fn [instruction-string]
                                 (let [[_ axis value] (re-find #"fold along (x|y)=(\d+)" instruction-string)]
                                  {:fold-axis (keyword axis)

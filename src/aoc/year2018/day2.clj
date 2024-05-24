@@ -6,7 +6,8 @@
    [aoc.helpers :as helpers]))
 
 (defn part1 [input]
-  (let [freqs (->> (string/split input #"\n")
+  (let [freqs (->> input
+                   string/split-lines
                    (map frequencies)
                    (map set/map-invert))]
     (* (->> freqs
@@ -27,7 +28,7 @@
 #_(string-distance "aab" "aaa")
 
 (defn part2 [input]
-  (->> (combo/combinations (string/split input #"\n") 2)
+  (->> (combo/combinations (string/split-lines input) 2)
        (filter (fn [[a b]]
                 (= 1 (string-distance a b))))
        first

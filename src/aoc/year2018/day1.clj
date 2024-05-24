@@ -6,7 +6,8 @@
 ;; part 1
 
 (defn part1 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (map parse-long)
        (apply +)))
 
@@ -15,7 +16,8 @@
 ;; part 2
 
 (defn part2 [input]
-  (->> (string/split input #"\n")
+  (->> input
+       string/split-lines
        (map parse-long)
        cycle
        (reductions +)
