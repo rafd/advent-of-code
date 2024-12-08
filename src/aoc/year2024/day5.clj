@@ -35,8 +35,44 @@
                 (nth pages (quot (count pages) 2))))
          (apply +))))
 
-
 (r/tests
  (part1 (h/get-input 2024 "5example")) := 143
  (part1 (h/get-input 2024 5)) := 5588)
 
+(defn part2 [input]
+  (let [[raw-rules raw-updates] (string/split input #"\n\n")
+        ;; store a map of sets-of-page-pairs to page-to-sort-lower
+        ;; ex. {#{123 345} 123}
+        ;; this is later used in a custom sort comparator fn
+        rules (->> raw-rules
+                   string/split-lines
+                   ;["123|345" ...]
+                   (map (fn [line]
+                          (map parse-long (string/split line #"\|"))))
+                   (map (fn [pair]
+                          [(set pair) (first pair)]))
+                   (into {}))
+        updates (->> raw-updates
+                     string/split-lines
+                     (map (fn [line]
+                            (map parse-long (string/split line #",")))))
+        custom-sort (fn [pages]
+                      (sort (fn [a b]
+                              (condp  = (rules #{a b})
+                                a -1
+                                nil 0
+                                1))
+                            pages))
+        sorted? (fn [pages]
+                  (= pages
+                     (custom-sort pages)))]
+    (->> updates
+         (remove sorted?)
+         (map custom-sort)
+         (map (fn [pages]
+                (nth pages (quot (count pages) 2))))
+         (apply +))))
+
+(r/tests
+ (part2 (h/get-input 2024 "5example")) := 143
+ (part2 (h/get-input 2024 5)) := 5331)
