@@ -26,7 +26,7 @@
        count))
 
 (rcf/tests
- (part1 (h/get-input 2024 "2sample")) := 2
+ (part1 (h/get-input 2024 "2example")) := 2
  (part1 (h/get-input 2024 "2")) := 252)
 
 (defn extract-at-index [coll index]
@@ -49,6 +49,6 @@
        count))
 
 (rcf/tests
- (part2 (h/get-input 2024 "2sample")) := 4
+ (part2 (h/get-input 2024 "2example")) := 4
  (part2 (h/get-input 2024 2)) := 324)
 

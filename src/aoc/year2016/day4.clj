@@ -46,7 +46,7 @@
        (apply +)))
 
 (rcf/tests
-  (part-1 (h/get-input 2016 "4sample"))
+  (part-1 (h/get-input 2016 "4example"))
   := 1514)
 
 #_(part-1 (h/get-input 2016 4)) ;; 245102

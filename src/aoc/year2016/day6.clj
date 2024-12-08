@@ -27,7 +27,7 @@
        (apply str)))
 
 (rcf/tests
-  (part-1 (h/get-input 2016 "6sample"))
+  (part-1 (h/get-input 2016 "6example"))
   := "easter")
 
 #_(part-1 (h/get-input 2016 6)) ;; usccerug
@@ -46,7 +46,7 @@
        (apply str)))
 
 (rcf/tests
-  (part-2 (h/get-input 2016 "6sample"))
+  (part-2 (h/get-input 2016 "6example"))
   := "advent")
 
 #_(part-2 (h/get-input 2016 6)) ;; cnvvtafc
