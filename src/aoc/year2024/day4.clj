@@ -84,7 +84,36 @@
        (diagonal-south-west width input)
        (diagonal-north-east width input))))
 
-  (r/tests
-   (part1 (h/get-input 2024 "4example")) := 18
-   (part1 (h/get-input 2024 4)) := 2549)
+(r/tests
+ (part1 (h/get-input 2024 "4example")) := 18
+ (part1 (h/get-input 2024 4)) := 2549)
 
+(defn part2 [input]
+  (let [width (.indexOf input "\n")
+        ;; replace \n, because regexes don't work cross-line
+        input (string/replace input "\n" "*")]
+    (+
+     (count (re-seq (re-pattern
+                     (str
+                      "M(?=.S.{" (- width 2) "}"
+                      ".A..{" (- width 2) "}"
+                      "M.S)")) input))
+     (count (re-seq (re-pattern
+                     (str
+                      "M(?=.M.{" (- width 2) "}"
+                      ".A..{" (- width 2) "}"
+                      "S.S)")) input))
+     (count (re-seq (re-pattern
+                     (str
+                      "S(?=.S.{" (- width 2) "}"
+                      ".A..{" (- width 2) "}"
+                      "M.M)")) input))
+     (count (re-seq (re-pattern
+                     (str
+                      "S(?=.M.{" (- width 2) "}"
+                      ".A..{" (- width 2) "}"
+                      "S.M)")) input)))))
+
+(r/tests
+ (part2 (h/get-input 2024 "4example")) := 9
+ (part2 (h/get-input 2024 4)) := 2003)
