@@ -9,7 +9,7 @@
   (slurp (io/resource (str "inputs/" year "day" day ".txt"))))
 
 (defn get-input [year day]
- (string/trim (raw-input year day)))
+  (string/trim (raw-input year day)))
 
 (defn parse-input [year day deliminator]
   (-> (get-input year day)
