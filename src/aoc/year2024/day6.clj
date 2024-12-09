@@ -88,19 +88,72 @@
         state
         (recur state')))))
 
+(defn parse [input]
+  (->> input
+       string/split-lines
+       (mapv vec)))
+
 (defn part1 [input]
-  (let [grid (->> input
-                  string/split-lines
-                  (mapv vec))
-        state (grid->state grid)]
-    (->> (simulate state)
-         :state/grid
-         flatten
-         (filter #{\X})
-         count)))
+  (->> input
+       parse
+       grid->state
+       simulate
+       :state/grid
+       flatten
+       (filter #{\X})
+       count))
 
 (r/tests
  (part1 (h/get-input 2024 "6example")) := 41
  (part1 (h/get-input 2024 6)) := 5269)
 
+(defn find-positions [grid]
+  (->> (for [x (range (count (first grid)))
+             y (range (count grid))]
+         [y x])
+       (filter (fn [position]
+               (= \X (get-in grid position))))))
+
+(defn update-history [state]
+  (let [guard-position (:state/guard-position state)
+        guard (get-in state (concat [:state/grid] guard-position))]
+    (update-in state [:state/history guard-position] (fnil conj #{}) guard)))
+
+(defn simulate2 [state]
+  (loop [state (update-history state)]
+    (let [state' (-> state
+                     next-state
+                     update-history)]
+      (cond
+        (nil? (:state/guard-position state))
+        state
+        (= (:state/history state) (:state/history state'))
+        (assoc state :state/result :state.result/loop-detected)
+        :else
+        (recur state')))))
+
+(defn part2 [input]
+  (let [initial-state (->> input
+                           parse
+                           grid->state)
+        positions-visited (->> (simulate2 initial-state)
+                               :state/grid
+                               find-positions
+                               set)]
+    ;; for every spot visited (except the starting position)
+    ;; try it as an obstacle and see if it loops
+    (->> (disj positions-visited (find-guard (:state/grid initial-state)))
+         (filter (fn [position]
+                   (= :state.result/loop-detected
+                      (-> initial-state
+                          (assoc-in (concat [:state/grid] position) \#)
+                          simulate2
+                          :state/result))))
+         count)))
+
+(r/tests
+   (part2 (h/get-input 2024 "6example")) := 6)
+
+;; very slow
+#_(part2 (h/get-input 2024 6)) := 1957
 
