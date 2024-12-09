@@ -143,17 +143,19 @@
     ;; for every spot visited (except the starting position)
     ;; try it as an obstacle and see if it loops
     (->> (disj positions-visited (find-guard (:state/grid initial-state)))
-         (filter (fn [position]
+         ;; could filter here, but using pmap and filter after for better performance
+         (pmap (fn [position]
                    (= :state.result/loop-detected
                       (-> initial-state
                           (assoc-in (concat [:state/grid] position) \#)
                           simulate2
                           :state/result))))
+         (filter true?)
          count)))
 
 (r/tests
    (part2 (h/get-input 2024 "6example")) := 6)
 
-;; very slow
-#_(part2 (h/get-input 2024 6)) := 1957
+;; ~90s
+#_(time (part2 (h/get-input 2024 6))) := 1957
 
