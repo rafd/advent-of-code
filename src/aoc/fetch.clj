@@ -32,4 +32,7 @@
           (e/wait-visible {:class "day-desc"}))
         (spit target-file (e/get-element-text driver {:class "day-desc" :index part}))))))
 
-#_(fetch-instructions! 2023 1 1)
+#_(let [year 2024
+        day 7]
+    (fetch-instructions! year day 1)
+    (fetch-instructions! year day 2))
