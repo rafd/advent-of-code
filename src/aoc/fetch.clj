@@ -30,8 +30,19 @@
           (e/wait-visible {:class "day-desc"}))
         (spit target-file (e/get-element-text driver {:class "day-desc" :index part}))))))
 
+(defn create-namespace! [year day]
+  (let [target-file (io/file (str "src/aoc/year" year "/day" day ".clj"))]
+    (if (.exists target-file)
+      (println "Namespace for " year day "already exists")
+      (-> (slurp "src/aoc/template.clj")
+          (string/replace "2024" (str year))
+          (string/replace "3" (str day))
+          (string/replace "aoc.template" (str "aoc.year" year ".day" day))
+          (->> (spit target-file))))))
+
 #_(let [year 2024
-        day 10]
+        day 11]
+    (create-namespace! year day)
     (fetch-puzzle-input! year day)
     (fetch-instructions! year day 1)
     (fetch-instructions! year day 2))
