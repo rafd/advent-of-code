@@ -16,8 +16,6 @@
            :body
            (spit target-file)))))
 
-#_(fetch-puzzle-input! 2023 1)
-
 (defn fetch-instructions! [year day part]
   (let [target-file (io/file (str "resources/instructions/" year "day" day "part" part ".txt"))]
     (if (.exists target-file)
@@ -33,6 +31,7 @@
         (spit target-file (e/get-element-text driver {:class "day-desc" :index part}))))))
 
 #_(let [year 2024
-        day 7]
+        day 10]
+    (fetch-puzzle-input! year day)
     (fetch-instructions! year day 1)
     (fetch-instructions! year day 2))

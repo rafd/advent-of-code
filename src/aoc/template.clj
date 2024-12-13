@@ -13,15 +13,15 @@
        (map parse-line)))
 
 (r/tests
- (part1 (h/get-input 2023 "1example")) := nil)
+ (part1 (h/get-input 2024 "3example")) := nil)
 
-#_(part1 (h/get-input 2023 1))
+#_(part1 (h/get-input 2024 3))
 
 (defn part2 [input]
   (->> input
        (map parse-line)))
 
 #_(r/tests
-   (part2 (h/get-input 2023 "1example")) := nil)
+   (part2 (h/get-input 2024 "3example")) := nil)
 
-#_(part2 (h/get-input 2023 1))
+#_(part2 (h/get-input 2024 3))
