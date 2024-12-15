@@ -40,8 +40,15 @@
           (string/replace "aoc.template" (str "aoc.year" year ".day" day))
           (->> (spit target-file))))))
 
+(defn create-example-file! [year day]
+  (let [target-file (io/file (str "resources/inputs/" year "day" day "example.txt"))]
+    (if (.exists target-file)
+      (println "Example for " year day "already exists")
+      (spit target-file ""))))
+
 #_(let [year 2024
-        day 11]
+        day 12]
+    (create-example-file! year day)
     (create-namespace! year day)
     (fetch-puzzle-input! year day)
     (fetch-instructions! year day 1)
